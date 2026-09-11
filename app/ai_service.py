@@ -46,7 +46,7 @@ RETURN ONLY VALID RAW JSON — no markdown code fences, no extra text:
 """
 
 def generate_awkward_answer(prompt_text):
-    """Primary 100% AI generation function for Awkward Opposite answers."""
+    """Primary AI generation function for Awkward Opposite answers with fallback."""
     gemini_key = current_app.config.get("GEMINI_API_KEY")
     timeout = current_app.config.get("AI_TIMEOUT", 15)
     
@@ -54,77 +54,60 @@ def generate_awkward_answer(prompt_text):
         try:
             return _call_gemini_awkward(prompt_text, gemini_key, timeout)
         except Exception as e:
-            logger.warning(f"Gemini Awkward call failed: {e}")
-            raise e
+            logger.warning(f"Gemini Awkward call failed: {e}. Falling back to heuristic oracle.")
             
-    raise RuntimeError("GEMINI_API_KEY is not configured.")
+    return _generate_fallback_awkward(prompt_text)
 
 def escalate_awkwardness(prompt_text, previous_answer):
     """Live AI escalation to make the answer even more uncomfortably opposite."""
     gemini_key = current_app.config.get("GEMINI_API_KEY")
     timeout = current_app.config.get("AI_TIMEOUT", 15)
     
-    if not gemini_key:
-        raise RuntimeError("GEMINI_API_KEY is not configured.")
+    if gemini_key:
+        formatted_prompt = (
+            AWKWARD_ESCALATE_PROMPT
+            .replace("{original_prompt}", str(prompt_text))
+            .replace("{previous_answer}", str(previous_answer))
+        )
         
-    formatted_prompt = (
-        AWKWARD_ESCALATE_PROMPT
-        .replace("{original_prompt}", str(prompt_text))
-        .replace("{previous_answer}", str(previous_answer))
-    )
-    
-    candidate_models = [
-        "gemini-3.1-flash-lite",
-        "gemini-3.7-flash",
-        "gemini-3.8-flash",
-        "gemini-3.5-flash-lite",
-        "gemini-2.5-flash"
-    ]
-    headers = {"Content-Type": "application/json"}
-    
-    body = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": formatted_prompt}
-                ]
-            }
-        ],
-        "generationConfig": {
-            "responseMimeType": "application/json",
-            "temperature": 0.95,
-            "maxOutputTokens": 2048,
-            "thinkingConfig": {
-                "thinkingBudget": 0
+        candidate_models = [
+            "gemini-2.5-flash"
+        ]
+        headers = {"Content-Type": "application/json"}
+        
+        body = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": formatted_prompt}
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "responseMimeType": "application/json",
+                "temperature": 0.95,
+                "maxOutputTokens": 2048
             }
         }
-    }
-    
-    last_err = None
-    for model in candidate_models:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={gemini_key}"
-        try:
-            resp = requests.post(url, headers=headers, json=body, timeout=timeout)
-            if resp.status_code == 200:
-                data = resp.json()
-                candidates = data.get("candidates", [])
-                if candidates and "content" in candidates[0]:
-                    parts = candidates[0]["content"].get("parts", [])
-                    if parts and "text" in parts[0]:
-                        return _parse_awkward_json(parts[0]["text"], prompt_text)
-            else:
-                last_err = f"{model} returned {resp.status_code}"
-        except Exception as e:
-            last_err = str(e)
-            
-    raise RuntimeError(f"All Gemini models failed escalation: {last_err}")
+        
+        for model in candidate_models:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={gemini_key}"
+            try:
+                resp = requests.post(url, headers=headers, json=body, timeout=timeout)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    candidates = data.get("candidates", [])
+                    if candidates and "content" in candidates[0]:
+                        parts = candidates[0]["content"].get("parts", [])
+                        if parts and "text" in parts[0]:
+                            return _parse_awkward_json(parts[0]["text"], prompt_text)
+            except Exception as e:
+                logger.warning(f"Gemini escalate model {model} error: {e}")
+
+    return _generate_fallback_escalate(prompt_text, previous_answer)
 
 def _call_gemini_awkward(prompt_text, api_key, timeout):
     candidate_models = [
-        "gemini-3.1-flash-lite",
-        "gemini-3.7-flash",
-        "gemini-3.8-flash",
-        "gemini-3.5-flash-lite",
         "gemini-2.5-flash"
     ]
     headers = {"Content-Type": "application/json"}
@@ -225,6 +208,81 @@ def _parse_awkward_json(raw_text, prompt_text):
         "detailed_reason": opposite_advice,
         "improved_excuse": opposite_advice,
         "risk_level": "Catastrophic"
+    }
+
+def _generate_fallback_awkward(prompt_text):
+    """Contextual heuristic generator that delivers awkward opposite answers when live API is unconfigured."""
+    text_lower = prompt_text.lower()
+    
+    if any(w in text_lower for w in ["ex", "text", "crush", "date", "confess", "relationship"]):
+        answer = f"Whatever you do, do not communicate in any conventional human syntax. You should send them a 14-page PDF detailing the geopolitical trade treaties of 1842, followed immediately by 'oops wrong chat' and then delete your entire digital existence for 72 hours."
+        plan = "1. Draft an overly formal telegram addressed to their legal guardian.\n2. Arrive at their local supermarket 12 minutes before closing and stare intently at canned garbanzo beans until noticed.\n3. If spoken to, pretend you only speak Esperanto and briskly back away without blinking."
+        silence = "21.4 seconds of mutual, unblinking horror"
+        diag = "ROMANTIC SABOTAGE EXTRAORDINAIRE"
+    elif any(w in text_lower for w in ["boss", "job", "work", "raise", "salary", "interview", "fired"]):
+        answer = f"The optimal professional strategy is absolute non-sequitur dominance. Schedule an urgent 1-on-1 meeting at 7:00 AM titled 'STATUS CHECK', sit on the floor instead of a chair, and offer them a lukewarm hard-boiled egg without breaking eye contact."
+        plan = "1. Send a company-wide email congratulating everyone on Tuesday.\n2. When asked about your deliverables, describe a vivid dream you had about a forklift.\n3. Request your annual salary in vintage Chuck E. Cheese prize tickets."
+        silence = "34.1 seconds of awkward calendar shuffling"
+        diag = "CORPORATE INEPTITUDE LEVEL 9"
+    elif any(w in text_lower for w in ["alarm", "class", "late", "school", "exam", "homework", "teacher", "professor"]):
+        answer = f"Do not apologize for tardiness. Simply walk backwards into the lecture hall, sit in the front row facing the other students, and take meticulous handwritten notes on their posture."
+        plan = "1. Claim you were observing daylight saving time from the 18th century.\n2. Submit your assignment written entirely in green crayon on a paper napkin.\n3. If questioned, whisper 'the prophecy forbade it' and look suspiciously at the ceiling."
+        silence = "18.9 seconds of collective classroom silence"
+        diag = "ACADEMIC TIMELINE DISRUPTOR"
+    else:
+        answer = f"The only logical response to '{prompt_text}' is to execute the exact inverse of common decency: nod vigorously, offer an unexplained handshake, and slowly crab-walk out of the room while maintaining absolute stillness from the waist up."
+        plan = "1. Announce to anyone nearby that you did not do what you clearly just did.\n2. Replace all verbal responses with varied pitches of humming.\n3. Formally declare that you are now entering standby power mode."
+        silence = "16.8 seconds of deafening quiet"
+        diag = "TERMINAL OPPOSITE REACTION"
+
+    return {
+        "awkward_answer": answer,
+        "opposite_advice": plan,
+        "cringe_score": random.randint(88, 98),
+        "social_ruin": random.randint(90, 99),
+        "awkward_silence": silence,
+        "awkward_diagnosis": diag,
+        "roast": answer,
+        "ragebait_advice": plan,
+        "emotional_damage": 94,
+        "delusion_index": 98,
+        "copium_level": 92,
+        "damage_tier": diag,
+        "diagnosis_tag": diag,
+        "overall_score": 95,
+        "verdict": diag,
+        "short_reason": answer,
+        "detailed_reason": plan,
+        "improved_excuse": plan,
+        "risk_level": "Catastrophic"
+    }
+
+def _generate_fallback_escalate(prompt_text, previous_answer):
+    """Fallback escalation generator when live API is unavailable."""
+    answer = f"You thought that was awkward? It's time to escalate. Return to the scene wearing a fully buttoned trench coat, pull out a tiny chalkboard, and loudly squeak chalk across it while re-reading your dilemma word-for-word."
+    plan = "1. Send a voice memo of 4 solid minutes of rhythmic finger tapping.\n2. Claim diplomat immunity under international maritime admiralty law.\n3. When asked why you did this, hand them a business card that simply says 'NO QUESTIONS'."
+    diag = "APOCALYPTIC SOCIAL CATASTROPHE"
+    
+    return {
+        "awkward_answer": answer,
+        "opposite_advice": plan,
+        "cringe_score": 99,
+        "social_ruin": 100,
+        "awkward_silence": "42.0 seconds of unbearable tension",
+        "awkward_diagnosis": diag,
+        "roast": answer,
+        "ragebait_advice": plan,
+        "emotional_damage": 99,
+        "delusion_index": 100,
+        "copium_level": 99,
+        "damage_tier": diag,
+        "diagnosis_tag": diag,
+        "overall_score": 99,
+        "verdict": diag,
+        "short_reason": answer,
+        "detailed_reason": plan,
+        "improved_excuse": plan,
+        "risk_level": "Extinction Level"
     }
 
 # Backwards compatibility wrappers
