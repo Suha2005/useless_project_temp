@@ -6,12 +6,13 @@
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: Chicken Nuggets
+
 
 
 ### Team Members
-- Member 2: JINCE - [College]
-- Member 3: [Name] - [College]
+- Member 2: JINCE 
+- Member 3: SUHA SHAJAHAN
 
 ### Project Description
 [2-3 lines about what your project does]
@@ -25,15 +26,8 @@
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [Languages used]
-- [Frameworks used]
-- [Libraries used]
-- [Tools used]
+-
 
-For Hardware:
-- [List main components]
-- [List specifications]
-- [List tools required]
 
 ### Implementation
 For Software:
@@ -74,18 +68,9 @@ vercel
 For Software:
 
 # Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+https://drive.google.com/drive/u/0/folders/1Nxr276YDT71KwGZ7pdND7na4I4veGLN_
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
-
-# Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
 
 For Hardware:
 
