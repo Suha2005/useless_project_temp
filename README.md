@@ -10,8 +10,7 @@
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
+- Member 2: JINCE - [College]
 - Member 3: [Name] - [College]
 
 ### Project Description
