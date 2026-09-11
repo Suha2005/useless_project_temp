@@ -39,10 +39,37 @@ For Hardware:
 ### Implementation
 For Software:
 # Installation
-[commands]
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Fill in your GEMINI_API_KEY in .env
+```
 
-# Run
-[commands]
+# Run Locally
+```bash
+python run.py
+```
+
+# Deploy to Vercel 🚀
+
+The project is pre-configured for instant zero-config deployment on Vercel Serverless Functions.
+
+### Option 1: Deploy with Vercel CLI
+```bash
+npm i -g vercel
+vercel
+```
+
+### Option 2: Deploy via GitHub
+1. Push this repository to GitHub.
+2. Go to [vercel.com/new](https://vercel.com/new) and import the repository.
+3. Configure Environment Variables in the Vercel dashboard:
+   - `GEMINI_API_KEY`: Your Gemini API key.
+   - `SECRET_KEY`: A random secure string for session security.
+   - `DATABASE_URL` *(Optional)*: A PostgreSQL connection string (from [Neon](https://neon.tech), Supabase, or Vercel Postgres) for persistent multi-user database storage. If omitted, the app automatically runs serverless SQLite in `/tmp`.
+4. Click **Deploy**!
 
 ### Project Documentation
 For Software:

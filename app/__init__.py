@@ -1,13 +1,15 @@
 import os
+from pathlib import Path
 from flask import Flask
 from app.config import Config
 from app.models import db, Analysis, Leaderboard
 
 def create_app(config_class=Config):
+    base_dir = Path(__file__).resolve().parent.parent
     app = Flask(
         __name__,
-        template_folder="../templates",
-        static_folder="../static"
+        template_folder=str(base_dir / "templates"),
+        static_folder=str(base_dir / "static")
     )
     app.config.from_object(config_class)
     
@@ -20,8 +22,11 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp)
     
     with app.app_context():
-        db.create_all()
-        _seed_initial_leaderboard()
+        try:
+            db.create_all()
+            _seed_initial_leaderboard()
+        except Exception as e:
+            app.logger.warning(f"Database initialization warning: {e}")
         
     return app
 
