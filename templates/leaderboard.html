@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Wall of Shame // RAGEBAITER{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem;">
+    💀 THE WALL OF SHAME
+  </h1>
+  <p style="color: var(--text-secondary); font-size: 1.05rem;">
+    A public memorial to the most cooked submissions, delusions, and terrible life choices.
+  </p>
+</div>
+
+<div class="shame-feed">
+  {% for item in entries %}
+    <div class="shame-card">
+      <div class="shame-header">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.2rem;">💀</span>
+          <span style="font-weight: 700; color: #fff;">{{ item.display_name }}</span>
+          <span class="diag-tag" style="font-size: 0.68rem; padding: 0.15rem 0.5rem;">{{ item.situation }}</span>
+        </div>
+        <div class="tier-badge" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;">
+          {{ item.score }}% DAMAGE
+        </div>
+      </div>
+
+      <div class="shame-query">
+        «{{ item.excuse_text }}»
+      </div>
+
+      {% if item.analysis and item.analysis.short_reason %}
+        <div class="shame-roast">
+          <div style="font-size: 0.75rem; font-weight: 800; color: var(--flame-red); text-transform: uppercase; margin-bottom: 0.25rem;">
+            THE ROAST:
+          </div>
+          {{ item.analysis.short_reason }}
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+      No public victims yet. Be the first to get roasted!
+    </div>
+  {% endfor %}
+</div>
+
+<div style="text-align: center; margin-top: 2.5rem;">
+  <a href="/" class="btn btn-flame">🔥 Submit Your Dilemma To Get Roasted</a>
+</div>
+{% endblock %}

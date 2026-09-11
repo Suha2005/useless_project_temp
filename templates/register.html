@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Register Operator // EXCUSE.AI{% endblock %}
+
+{% block content %}
+<div style="max-width: 480px; margin: 2rem auto;">
+  <div class="glass-panel glow-cyan">
+    <div class="panel-header">
+      <h2 class="panel-title">
+        <span>📝</span>
+        <span>NEW OPERATOR ENROLLMENT</span>
+      </h2>
+      <span class="panel-badge">ENROLLMENT PORT</span>
+    </div>
+    
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+      Create an operator profile to unlock the Excuse Dossier, preserve history, and compete for Academic Integrity achievements.
+    </p>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="regUsername" class="form-label">OPERATOR USERNAME</label>
+        <input type="text" id="regUsername" class="form-input" placeholder="e.g. Neo or AgentSmith" minlength="3" maxlength="30" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail" class="form-label">EMAIL ADDRESS</label>
+        <input type="email" id="regEmail" class="form-input" placeholder="operator@excuse.ai" required>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword" class="form-label">PASSWORD (MIN 6 CHARACTERS)</label>
+        <input type="password" id="regPassword" class="form-input" placeholder="••••••••" minlength="6" required>
+      </div>
+
+      <div id="registerError" style="display:none; color: var(--crimson-alert); font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 1rem;"></div>
+
+      <button type="submit" id="submitRegBtn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+        Generate Operator Credentials
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted);">
+      Already have credentials? <a href="/login" style="color: var(--cyan-core); text-decoration: none; font-weight: 600;">Authenticate Here</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("registerForm");
+  const username = document.getElementById("regUsername");
+  const email = document.getElementById("regEmail");
+  const password = document.getElementById("regPassword");
+  const errorEl = document.getElementById("registerError");
+  const submitBtn = document.getElementById("submitRegBtn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.style.display = "none";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Provisioning ID...";
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username.value.trim(),
+          email: email.value.trim(),
+          password: password.value
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("Operator Registered. Welcome!", "success");
+        SFX.playChime(95);
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 500);
+      } else {
+        errorEl.textContent = data.error || "Registration rejected.";
+        errorEl.style.display = "block";
+        SFX.playBlip(200, 0.1, "sawtooth");
+      }
+    } catch (err) {
+      errorEl.textContent = "Communication error with neural server.";
+      errorEl.style.display = "block";
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Generate Operator Credentials";
+    }
+  });
+});
+</script>
+{% endblock %}

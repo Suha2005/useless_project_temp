@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Viral Presets // RAGEBAITER{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 2.5rem;">
+  <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem;">
+    ⚡ VIRAL ROAST PRESETS
+  </h1>
+  <p style="color: var(--text-secondary); font-size: 1.05rem;">
+    1-click terrible decisions to test the ragebait engine immediately.
+  </p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+  <!-- Preset 1 -->
+  <div class="clean-card preset-card" style="cursor: pointer;" onclick="loadPreset('Should I text my ex? It\'s 2:30 AM and I feel like they still love me.')">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">💔</div>
+    <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem; color: #fff;">Texting The Ex At 2:30 AM</div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+      «Should I text my ex? It's 2:30 AM and I feel like they still love me.»
+    </p>
+    <span class="btn btn-outline-flame btn-sm">Roast This</span>
+  </div>
+
+  <!-- Preset 2 -->
+  <div class="clean-card preset-card" style="cursor: pointer;" onclick="loadPreset('I want to quit my 9-5 corporate job to become a full-time Twitch streamer with 3 followers.')">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">💼</div>
+    <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem; color: #fff;">Quitting Job For 3 Twitch Followers</div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+      «I want to quit my 9-5 job to become a full-time Twitch streamer with 3 followers.»
+    </p>
+    <span class="btn btn-outline-flame btn-sm">Roast This</span>
+  </div>
+
+  <!-- Preset 3 -->
+  <div class="clean-card preset-card" style="cursor: pointer;" onclick="loadPreset('I spent my rent money on DoorDash and memecoins because a guy on TikTok told me to.')">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">💸</div>
+    <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem; color: #fff;">Rent Money Into Memecoins & Burritos</div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+      «I spent my rent money on DoorDash and memecoins because a guy on TikTok told me to.»
+    </p>
+    <span class="btn btn-outline-flame btn-sm">Roast This</span>
+  </div>
+
+  <!-- Preset 4 -->
+  <div class="clean-card preset-card" style="cursor: pointer;" onclick="loadPreset('I missed my final exam because my alarm clock entered sleep mode to prioritize its mental health.')">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">⏰</div>
+    <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem; color: #fff;">Alarm Clock Self-Care Day</div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+      «I missed my final exam because my alarm clock entered sleep mode to prioritize its mental health.»
+    </p>
+    <span class="btn btn-outline-flame btn-sm">Roast This</span>
+  </div>
+
+  <!-- Preset 5 -->
+  <div class="clean-card preset-card" style="cursor: pointer;" onclick="loadPreset('I haven\'t started my 20-page research paper due in 45 minutes. How do I lock in?')">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📚</div>
+    <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem; color: #fff;">20-Page Paper In 45 Minutes</div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+      «I haven't started my 20-page research paper due in 45 minutes. How do I lock in?»
+    </p>
+    <span class="btn btn-outline-flame btn-sm">Roast This</span>
+  </div>
+
+  <!-- Preset 6 -->
+  <div class="clean-card preset-card" style="cursor: pointer;" onclick="loadPreset('I skipped the gym for 14 consecutive months but I still drink protein shakes every day.')">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🏃</div>
+    <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem; color: #fff;">14-Month Gym Hiatus</div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+      «I skipped the gym for 14 consecutive months but I still drink protein shakes every day.»
+    </p>
+    <span class="btn btn-outline-flame btn-sm">Roast This</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function loadPreset(text) {
+  sessionStorage.setItem("prefill_prompt", text);
+  window.location.href = "/";
+}
+</script>
+{% endblock %}

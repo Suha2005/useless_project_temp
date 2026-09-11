@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}My Trauma Log // RAGEBAITER{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+  <div>
+    <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.25rem;">
+      📜 TRAUMA LOG // {{ user.username }}
+    </h1>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">
+      Your permanent record of bad decisions, terrible excuses, and emotional damage.
+    </p>
+  </div>
+  <a href="/" class="btn btn-flame btn-sm">🔥 Get Roasted Again</a>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+  <div class="stat-box">
+    <div class="stat-box-num" style="color: var(--flame-red);">{{ total_count }}</div>
+    <div class="stat-box-label">Times Cooked</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-box-num" style="color: var(--toxic-amber);">{{ avg_score }}%</div>
+    <div class="stat-box-label">Avg Emotional Damage</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-box-num" style="color: #fff;">{{ worst_score }}%</div>
+    <div class="stat-box-label">Peak Rock Bottom</div>
+  </div>
+</div>
+
+<!-- Roast History Feed -->
+<h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; color: #fff;">
+  PAST HUMILIATIONS
+</h3>
+
+{% if analyses %}
+  <div class="shame-feed">
+    {% for item in analyses %}
+      <div class="shame-card">
+        <div class="shame-header">
+          <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted);">
+            {{ item.created_at.strftime('%b %d, %Y at %H:%M') }}
+          </div>
+          <div class="tier-badge" style="font-size: 0.72rem; padding: 0.2rem 0.6rem;">
+            {{ item.overall_score }}% DAMAGE
+          </div>
+        </div>
+
+        <div class="shame-query">
+          «{{ item.excuse_text }}»
+        </div>
+
+        <div class="shame-roast" style="margin-bottom: 0.75rem;">
+          <div style="font-size: 0.72rem; font-weight: 800; color: var(--flame-red); text-transform: uppercase; margin-bottom: 0.2rem;">
+            THE ROAST:
+          </div>
+          {{ item.short_reason }}
+        </div>
+
+        {% if item.detailed_reason %}
+          <div style="background: rgba(255, 106, 0, 0.05); border-left: 3px solid var(--flame-orange); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; color: #f4f4f5;">
+            <div style="font-size: 0.72rem; font-weight: 800; color: var(--flame-orange); text-transform: uppercase; margin-bottom: 0.2rem;">
+              UNHELPFUL ADVICE:
+            </div>
+            {{ item.detailed_reason }}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="clean-card" style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+    <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">You haven't been roasted yet.</p>
+    <a href="/" class="btn btn-flame btn-sm">Enter Your First Dilemma</a>
+  </div>
+{% endif %}
+{% endblock %}

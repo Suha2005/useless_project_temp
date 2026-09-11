@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}AWKWARD OPPOSITE — The Socially Disastrous Oracle{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="awkward-hero">
+  <div class="hero-pill">
+    <span class="pill-dot"></span> 100% Real-Time AI · Zero Common Sense · Pure Backwards Logic
+  </div>
+  <h1 class="hero-title">
+    Ask anything.<br>
+    <span>Get the most awkward opposite answer.</span>
+  </h1>
+  <p class="hero-subtitle">
+    Share a dilemma, question, goal, or normal human scenario. The Oracle will invert all conventional wisdom and give you the most painfully backwards, socially catastrophic response possible.
+  </p>
+</section>
+
+<!-- Input Card -->
+<section class="clean-card input-workspace glow" id="inputContainer">
+  <div class="input-header">
+    <label for="awkwardInput" class="input-label">
+      <span>What's the situation?</span>
+      <span class="sub-hint">Ask advice, confess something, or state your goal</span>
+    </label>
+    <span id="charCounter" class="char-count">0 / 1000</span>
+  </div>
+
+  <textarea
+    id="awkwardInput"
+    class="form-textarea"
+    placeholder="e.g. I want to ask my crush out on a date... / I broke my boss's favorite mug... / How do I make friends at a new gym?..."
+    maxlength="1000"
+    rows="4"
+    autofocus
+  ></textarea>
+
+  <div id="validationAlert" class="validation-alert" style="display:none;"></div>
+
+  <div class="input-actions">
+    <button type="button" id="submitBtn" class="btn btn-awkward">
+      <span class="btn-icon">⚡</span>
+      <span class="btn-text">Get Awkward Opposite Answer</span>
+    </button>
+  </div>
+</section>
+
+<!-- Loading State -->
+<div id="awkwardLoader" class="awkward-loader">
+  <div class="spinner-orbit">
+    <div class="orbit-center">👀</div>
+    <div class="orbit-particle"></div>
+  </div>
+  <div class="loader-title" id="loaderText">Inverting social norms...</div>
+  <div class="loader-sub">Consulting the socially broken oracle</div>
+</div>
+
+<!-- Result Section -->
+<section id="resultSection" class="awkward-result-section">
+  <div class="clean-card glow-result">
+
+    <!-- Top Badge Header -->
+    <div class="result-header-bar">
+      <div class="diagnosis-badge" id="diagBadge">TERMINAL SOCIAL INEPTITUDE</div>
+      <div class="silence-badge" id="silenceBadge">
+        <span class="silence-icon">⏱️</span>
+        <span id="silenceText">14.6s of unblinking eye contact</span>
+      </div>
+    </div>
+
+    <!-- The Awkward Answer -->
+    <div class="answer-container">
+      <div class="section-label">
+        <span class="label-dot"></span> THE AWKWARD OPPOSITE
+      </div>
+      <div id="awkwardOutput" class="awkward-body">...</div>
+    </div>
+
+    <!-- The Backwards Action Plan -->
+    <div class="opposite-plan-box">
+      <div class="plan-header">
+        <span class="plan-icon">🚨</span>
+        <div>
+          <div class="plan-title">YOUR BACKWARDS ACTION PLAN</div>
+          <div class="plan-subtitle">Guaranteed to ensure maximum secondhand embarrassment</div>
+        </div>
+      </div>
+      <div id="oppositePlanOutput" class="plan-body">...</div>
+    </div>
+
+    <!-- Awkward Meters Grid -->
+    <div class="meters-grid">
+      <div class="meter-card">
+        <div class="meter-info">
+          <span class="meter-label">CRINGE FACTOR</span>
+          <span class="meter-val" id="valCringe">94%</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill fill-cringe" id="barCringe" style="width: 94%;"></div>
+        </div>
+      </div>
+
+      <div class="meter-card">
+        <div class="meter-info">
+          <span class="meter-label">SOCIAL RUIN RISK</span>
+          <span class="meter-val" id="valRuin">98%</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill fill-ruin" id="barRuin" style="width: 98%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escalation Box (Revealed on 'Make It Worse') -->
+    <div id="escalateBox" class="escalate-box" style="display:none;">
+      <div class="escalate-header">
+        <span class="escalate-icon">💀</span>
+        <span class="escalate-title">ESCALATED SOCIAL DISASTER (100% REAL AI)</span>
+      </div>
+      <div id="escalateAnswer" class="escalate-body">...</div>
+      <div id="escalateAdvice" class="escalate-advice">...</div>
+    </div>
+
+    <!-- Actions Toolbar -->
+    <div class="result-actions">
+      <button type="button" id="escalateBtn" class="btn btn-outline-awkward">
+        <span>💥</span> Make It Even More Awkward
+      </button>
+      <button type="button" id="copyBtn" class="btn btn-secondary">
+        <span>📋</span> Copy Plan
+      </button>
+      <button type="button" id="shameBtn" class="btn btn-secondary">
+        <span>🏆</span> Hall of Cringe
+      </button>
+      <button type="button" id="newBtn" class="btn btn-awkward-sm">
+        <span>🔄</span> New Dilemma
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- Hall of Cringe Modal -->
+<div id="shameModal" class="modal-backdrop">
+  <div class="modal-content">
+    <h3 class="modal-title">🏆 SUBMIT TO HALL OF CRINGE</h3>
+    <p class="modal-desc">
+      Share this awkward interaction publicly for others to cringe at. Choose an alias.
+    </p>
+    <div class="form-group">
+      <label for="shameAlias" class="form-label">Your Anonymous Alias</label>
+      <input type="text" id="shameAlias" class="form-input" placeholder="e.g. SociallyDefective" value="Anonymous Overthinker" maxlength="40">
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="closeShameModalBtn" class="btn btn-secondary btn-sm">Cancel</button>
+      <button type="button" id="confirmShameBtn" class="btn btn-awkward btn-sm">Publish Cringe</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/analyzer.js') }}"></script>
+{% endblock %}
